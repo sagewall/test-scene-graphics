@@ -1,6 +1,7 @@
 import "@arcgis/core/assets/esri/themes/light/main.css";
 import "@arcgis/map-components/dist/components/arcgis-placement";
 import "@arcgis/map-components/dist/components/arcgis-scene";
+import "@arcgis/map-components/dist/components/arcgis-map";
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import { setAssetPath } from "@esri/calcite-components/dist/components";
 import "@esri/calcite-components/dist/components/calcite-action";

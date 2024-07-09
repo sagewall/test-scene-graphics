@@ -3,22 +3,18 @@ import Graphic from "@arcgis/core/Graphic";
 import Collection from "@arcgis/core/core/Collection";
 import Point from "@arcgis/core/geometry/Point";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import type { ArcgisSceneCustomEvent } from "@arcgis/map-components";
-import { ArcgisPlacement, ArcgisScene } from "@arcgis/map-components-react";
-import { CalciteAction } from "@esri/calcite-components-react";
-import { useRef } from "react";
+import {
+  CalciteAction,
+  CalciteActionGroup,
+} from "@esri/calcite-components-react";
+import { useState } from "react";
 import "./App.css";
-
-const viewStyles = {
-  height: "100%",
-  width: "100%",
-};
+import Map from "./Map";
+import Scene from "./Scene";
 
 function App() {
-  const arcgisScene = useRef<HTMLArcgisSceneElement>(null);
-
-  const latitude = 34.0564505;
-  const longitude = -117.1957098;
+  const [latitude, setLatitude] = useState(34.0564505);
+  const [longitude, setLongitude] = useState(-117.1957098);
 
   const point = new Point({
     latitude,
@@ -32,25 +28,13 @@ function App() {
     symbol: simpleMarkerSymbol,
   });
 
-  const graphics = new Collection();
-  graphics.add(pointGraphic);
+  const graphicsCollection = new Collection();
+  graphicsCollection.add(pointGraphic);
 
-  const handleArcgisViewReadyChange = (event: ArcgisSceneCustomEvent<void>) => {
-    event.target.center = new Point({
-      latitude,
-      longitude,
-    });
+  const [graphics, setGraphics] =
+    useState<Collection<Graphic>>(graphicsCollection);
 
-    event.target.view.zoom = 17;
-
-    event.target.graphics = graphics;
-  };
-
-  const handleGraphicsChange = () => {
-    if (!arcgisScene.current) {
-      return;
-    }
-    console.log(arcgisScene.current?.graphics);
+  function handleGraphicsChange() {
     const newSimpleMarkerSymbol = simpleMarkerSymbol.clone();
     newSimpleMarkerSymbol.color = new Color([
       randomColor(),
@@ -59,29 +43,26 @@ function App() {
       1,
     ]);
 
-    const newPointGraphic = arcgisScene.current.graphics.getItemAt(0).clone();
+    const newPointGraphic = graphicsCollection.getItemAt(0).clone();
     newPointGraphic.symbol = newSimpleMarkerSymbol;
 
     const newGraphics = new Collection();
     newGraphics.add(newPointGraphic);
-    arcgisScene.current.graphics = newGraphics;
-  };
+    setGraphics(newGraphics);
+  }
 
-  const randomColor = () => {
+  function handleMove() {
+    setLatitude(latitude + 0.00001);
+    setLongitude(longitude + 0.00001);
+  }
+
+  function randomColor() {
     return Math.floor(Math.random() * 256);
-  };
+  }
 
   return (
-    <ArcgisScene
-      basemap="gray-vector"
-      ground="world-elevation"
-      onArcgisViewReadyChange={(event) => {
-        handleArcgisViewReadyChange(event);
-      }}
-      ref={arcgisScene}
-      style={viewStyles}
-    >
-      <ArcgisPlacement position="top-right">
+    <>
+      <CalciteActionGroup>
         <CalciteAction
           icon="zoom-to-object"
           scale="s"
@@ -91,8 +72,23 @@ function App() {
             handleGraphicsChange();
           }}
         ></CalciteAction>
-      </ArcgisPlacement>
-    </ArcgisScene>
+        <CalciteAction
+          icon="move"
+          scale="s"
+          text="Nudge position"
+          textEnabled
+          onClick={() => {
+            handleMove();
+          }}
+        ></CalciteAction>
+      </CalciteActionGroup>
+      <Scene
+        graphics={graphics}
+        latitude={latitude}
+        longitude={longitude}
+      ></Scene>
+      <Map graphics={graphics} latitude={latitude} longitude={longitude}></Map>
+    </>
   );
 }
 
