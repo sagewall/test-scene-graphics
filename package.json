@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@arcgis/map-components-react": "^4.30.4",
-    "@esri/calcite-components-react": "2.8.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
