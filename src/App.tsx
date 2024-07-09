@@ -3,10 +3,6 @@ import Graphic from "@arcgis/core/Graphic";
 import Collection from "@arcgis/core/core/Collection";
 import Point from "@arcgis/core/geometry/Point";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import {
-  CalciteAction,
-  CalciteActionGroup,
-} from "@esri/calcite-components-react";
 import { useState } from "react";
 import "./App.css";
 import Map from "./Map";
@@ -62,26 +58,8 @@ function App() {
 
   return (
     <>
-      <CalciteActionGroup>
-        <CalciteAction
-          icon="zoom-to-object"
-          scale="s"
-          text="Change graphic's color"
-          textEnabled
-          onClick={() => {
-            handleGraphicsChange();
-          }}
-        ></CalciteAction>
-        <CalciteAction
-          icon="move"
-          scale="s"
-          text="Nudge position"
-          textEnabled
-          onClick={() => {
-            handleMove();
-          }}
-        ></CalciteAction>
-      </CalciteActionGroup>
+      <button onClick={handleGraphicsChange}>Change graphics color</button>
+      <button onClick={handleMove}>Slightly move map</button>
       <Scene
         graphics={graphics}
         latitude={latitude}
