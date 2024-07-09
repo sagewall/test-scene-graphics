@@ -3,10 +3,15 @@ import Graphic from "@arcgis/core/Graphic";
 import Collection from "@arcgis/core/core/Collection";
 import Point from "@arcgis/core/geometry/Point";
 import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+import { ArcgisMap, ArcgisScene } from "@arcgis/map-components-react";
 import { useState } from "react";
 import "./App.css";
-import Map from "./Map";
-import Scene from "./Scene";
+
+const viewStyles = {
+  display: "block",
+  height: "200px",
+  width: "100%",
+};
 
 function App() {
   const [latitude, setLatitude] = useState(34.0564505);
@@ -60,12 +65,33 @@ function App() {
     <>
       <button onClick={handleGraphicsChange}>Change graphics color</button>
       <button onClick={handleMove}>Slightly move map</button>
-      <Scene
+      <h2>ArcgisScene</h2>
+      <ArcgisScene
+        basemap="gray-vector"
+        center={
+          new Point({
+            latitude,
+            longitude,
+          })
+        }
         graphics={graphics}
-        latitude={latitude}
-        longitude={longitude}
-      ></Scene>
-      <Map graphics={graphics} latitude={latitude} longitude={longitude}></Map>
+        ground="world-elevation"
+        style={viewStyles}
+        zoom={17}
+      ></ArcgisScene>
+      <h2>ArcgisMap</h2>
+      <ArcgisMap
+        basemap="gray-vector"
+        center={
+          new Point({
+            latitude,
+            longitude,
+          })
+        }
+        graphics={graphics}
+        style={viewStyles}
+        zoom={17}
+      ></ArcgisMap>
     </>
   );
 }
