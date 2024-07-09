@@ -30,7 +30,7 @@ function Scene({ graphics, latitude, longitude }: SceneProps) {
         })
       }
       graphics={graphics}
-      // ground="world-elevation"
+      ground="world-elevation"
       ref={arcgisScene}
       style={viewStyles}
       zoom={17}
